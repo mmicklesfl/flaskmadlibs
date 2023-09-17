@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='madlibs.css') }}">
+    <title>Madlibs Form</title>
+</head>
+<body>
+    <h1>Madlibs</h1>
+    <form action="{% if selected_story %}/{% else %}/select-story{% endif %}" method="post">
+        
+        {% if selected_story %}
+            <!-- If a story is selected, display input fields for its prompts -->
+            {% for prompt in selected_story.prompts %}
+                <label for="{{ prompt|replace("_", " ")|title }}">{{ prompt|replace("_", " ")|title }}</label>
+                <input type="text" id="{{ prompt|replace("_", " ")|title }}" name="{{ prompt|replace("_", " ")|title }}" required>
+                <br><br>
+            {% endfor %}
+            <input type="hidden" name="story_type" value="{{ selected_story_key }}">
+            <input type="submit" value="Generate Story">
+            
+        {% else %}
+            <!-- If no story is selected yet, display the dropdown to choose a story -->
+            <label for="story_type">Choose a story:</label>
+            <select name="story_type" id="story_type" required>
+                {% for story_key, story_val in stories.items() %}
+                    <option value="{{ story_key|replace("_", " ")|title }}">{{ story_key|replace("_", " ")|title }}</option>
+                {% endfor %}
+            </select>
+            <br><br>
+            <input type="submit" value="Select Story">
+<br><br>
+<a href="/create" class="create-button">Write Your OWN Madlibs!</a>
+
+        {% endif %}
+        
+    </form>
+</body>
+</html>
